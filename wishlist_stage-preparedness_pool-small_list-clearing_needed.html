@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riverside Relief Wishlist — WKTN News 5</title>
+<style>
+  :root{
+    --navy:#0b3d63; --navy-dark:#082c48; --rust:#c0392b; --rust-dark:#9a2d21;
+    --teal:#0f6357; --teal-light:#e8f4f1; --ink:#1b2733; --muted:#5c6773;
+    --bg:#f4f1ea; --card:#ffffff; --line:#e3ddd0; --mockup:#8a1f14;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-variant-numeric:tabular-nums;}
+  a{color:inherit;}
+
+  .mockup-bar{background:var(--mockup);color:#fff;text-align:center;font-size:12.5px;
+    font-weight:600;letter-spacing:.02em;padding:7px 14px;}
+
+  header.site{background:linear-gradient(180deg,var(--navy) 0%,var(--navy-dark) 100%);color:#fff;}
+  .site-inner{max-width:860px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;gap:14px;}
+  .mark{flex:none;width:40px;height:40px;border-radius:50%;background:var(--rust);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;
+    font-family:Georgia,serif;}
+  .wordmark{line-height:1.1;}
+  .wordmark .wktn{font-size:12px;font-weight:700;letter-spacing:.16em;color:#c9d6e2;}
+  .wordmark .news{font-size:20px;font-weight:900;letter-spacing:.02em;}
+  .tagline{margin-left:auto;font-size:12.5px;color:#9fb3c4;font-style:italic;display:none;}
+  @media (min-width:560px){.tagline{display:block;}}
+  nav.site-nav{background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.12);}
+  .site-nav-inner{max-width:860px;margin:0 auto;padding:9px 20px;display:flex;gap:22px;
+    font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:#9fb3c4;overflow-x:auto;}
+  .site-nav-inner .active{color:#fff;border-bottom:2px solid var(--rust);padding-bottom:7px;margin-bottom:-9px;}
+
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 140px;}
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--rust);margin:0 0 8px;}
+  h1{font-size:26px;line-height:1.25;margin:0 0 10px;letter-spacing:-.01em;}
+  .intro{color:var(--muted);font-size:14.5px;line-height:1.6;margin:0 0 24px;max-width:62ch;}
+
+  .org-card{display:flex;gap:14px;align-items:flex-start;background:var(--card);
+    border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 20px;}
+  .org-card img{flex:none;width:52px;height:52px;border-radius:50%;}
+  .org-card .org-name{font-weight:800;font-size:15.5px;color:var(--teal);margin:0 0 2px;}
+  .org-card .org-sub{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 8px;}
+  .org-card p{margin:0;font-size:13.5px;line-height:1.55;color:var(--muted);}
+
+  .pool-box{background:#fdf6ec;border:1px solid #e8d9b8;border-left:4px solid #c98a1f;
+    border-radius:8px;padding:14px 18px;margin:0 0 24px;font-size:13.5px;line-height:1.55;
+    color:#6b4f12;font-style:italic;}
+
+  .task-box{background:var(--teal-light);border-radius:10px;padding:16px 20px;margin:0 0 20px;}
+  .task-box .amount{font-size:19px;font-weight:900;color:var(--teal);}
+  .task-box p{margin:6px 0 0;font-size:13px;line-height:1.5;color:#2e544c;}
+
+  .category{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);padding-top:18px;border-top:1px solid var(--line);}
+  .category:first-of-type{border-top:none;padding-top:0;}
+
+  .item-row{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;
+    align-items:center;padding:12px 0;border-bottom:1px solid var(--line);}
+  .item-row .icon{font-size:22px;width:30px;text-align:center;grid-row:span 2;}
+  .item-row .name{font-weight:700;font-size:14.5px;grid-column:2;}
+  .item-row .meta{grid-column:2;font-size:12px;color:var(--ink);display:flex;gap:10px;flex-wrap:wrap;}
+  .item-row .selectwrap{grid-column:3;grid-row:span 2;}
+
+  .qty-stepper{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
+  .qty-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--line);
+    background:#fff;color:var(--navy);font-size:17px;font-weight:800;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .12s ease, border-color .12s ease, color .12s ease;}
+  .qty-btn:disabled{opacity:.35;cursor:default;}
+  .qty-val{min-width:16px;text-align:center;font-weight:800;font-size:14.5px;}
+  .qty-stepper.has-qty .qty-val{color:var(--teal);}
+  .qty-stepper.has-qty .qty-btn.plus{border-color:var(--teal);color:var(--teal);}
+
+  .alt-divider{display:flex;align-items:center;gap:12px;margin:28px 0 16px;color:var(--muted);
+    font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+  .alt-divider::before,.alt-divider::after{content:"";flex:1;height:1px;background:var(--line);}
+  .alt-options{display:flex;flex-direction:column;gap:10px;margin:0 0 8px;}
+  .alt-option{display:flex;align-items:flex-start;gap:10px;background:var(--card);
+    border:1.5px solid var(--line);border-radius:10px;padding:13px 16px;cursor:pointer;
+    font-size:13.5px;line-height:1.45;transition:border-color .12s ease, background .12s ease;}
+  .alt-option:hover{border-color:#c7bfae;}
+  .alt-option input{margin-top:3px;accent-color:var(--teal);flex:none;}
+  .alt-option.checked{border-color:var(--teal);background:var(--teal-light);}
+  .alt-followup{background:var(--teal-light);border-radius:10px;padding:16px 18px;margin:12px 0 20px;}
+  .alt-followup-q{margin:0 0 10px;font-size:13.5px;line-height:1.55;color:#2e544c;}
+  .alt-followup-text{width:100%;min-height:90px;padding:10px 12px;border-radius:8px;
+    border:1.5px solid var(--line);font-family:inherit;font-size:13.5px;line-height:1.5;
+    resize:vertical;box-sizing:border-box;}
+  .alt-selected-note{font-size:13px;font-weight:700;color:var(--teal);margin-top:4px;}
+
+  .sticky{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);
+    box-shadow:0 -6px 18px rgba(0,0,0,.08);padding:14px 20px;z-index:20;}
+  .sticky-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:16px;}
+  .sticky .totals{flex:1;}
+  .sticky .totals .label{font-size:11.5px;color:var(--muted);font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;}
+  .sticky .totals .amt{font-size:19px;font-weight:900;color:var(--navy);}
+  .sticky .totals .amt .of{font-weight:600;color:var(--muted);font-size:14px;}
+  .dots{display:flex;gap:6px;margin-top:6px;}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--line);}
+  .dot.on{background:var(--teal);}
+  .continue-btn{flex:none;background:var(--rust);color:#fff;border:none;border-radius:8px;
+    padding:13px 26px;font-size:14.5px;font-weight:800;cursor:pointer;letter-spacing:.01em;}
+  .continue-btn:hover{background:var(--rust-dark);}
+  .continue-btn:disabled{opacity:.5;cursor:default;}
+  .over-msg{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);
+    color:#fff;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:7px;opacity:0;
+    pointer-events:none;transition:opacity .15s ease;z-index:30;}
+  .over-msg.show{opacity:1;}
+
+  .done-screen{position:fixed;inset:0;background:rgba(11,61,99,.97);color:#fff;
+    display:none;align-items:center;justify-content:center;text-align:center;z-index:40;padding:24px;}
+  .done-screen.show{display:flex;}
+  .done-screen h2{font-size:22px;margin:0 0 10px;}
+  .done-screen p{font-size:14px;color:#c9d6e2;max-width:40ch;margin:0 auto;line-height:1.5;}
+
+  footer{max-width:860px;margin:40px auto 0;padding:18px 20px 110px;font-size:11.5px;
+    color:var(--muted);line-height:1.6;border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+
+<div class="mockup-bar">MOCKUP &mdash; fictional station, organization &amp; scenario, for illustration only. Research stimulus (stage=preparedness&amp;pool=small&amp;list=clearing_needed).</div>
+
+<header class="site">
+  <div class="site-inner">
+    <div class="mark">5</div>
+    <div class="wordmark">
+      <div class="wktn">WKTN</div>
+      <div class="news">NEWS 5</div>
+    </div>
+    <div class="tagline">Local. Always on.</div>
+  </div>
+</header>
+<nav class="site-nav"><div class="site-nav-inner"><span class="">Home</span><span class="">Local</span><span class="">Weather</span><span class="active">Community</span></div></nav>
+
+<div class="wrap">
+  <p class="eyebrow">Community Resources</p>
+  <h1>Help Riverside Relief Prepare for Cumberland River Flooding</h1>
+  <p class="intro">As seen on WKTN News 5 &mdash; Riverside Relief's full supply list, updated live.</p>
+
+  <div class="org-card">
+    <img src="data:image/png;base64,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" alt="Riverside Relief logo">
+    <div>
+      <p class="org-name">Riverside Relief</p>
+      <p class="org-sub">Regional Nonprofit</p>
+      <p>Riverside Relief is a regional nonprofit helping communities along the Cumberland River prepare for and recover from flooding. It has posted this list of supplies so people who want to help can choose specific items to have shipped directly to where they're needed.</p>
+    </div>
+  </div>
+
+  <div class="pool-box">Riverside Relief posted this list on a local community board. About 30 people have viewed it so far. Roughly 20% of what the shelter needs has been donated already.</div>
+
+  <div class="task-box">
+    <span class="amount">Choose 2 items to donate.</span>
+    <p>Select two donation units below using the + and − buttons &mdash; choosing the same item twice (for example, two cases of bottled water) is allowed. Riverside Relief will have them shipped directly to where they're needed.</p>
+  </div>
+
+  <div id="itemList">
+    <div class="category">Life-sustaining</div>
+
+    <div class="item-row" data-id="water">
+      <div class="icon">💧</div>
+      <div class="name">Bottled water (case of 24)</div>
+      <div class="meta">Units needed: 400 &middot; Still needed: 304</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Bottled water (case of 24)">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Bottled water (case of 24)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="formula">
+      <div class="icon">🍼</div>
+      <div class="name">Baby formula (can)</div>
+      <div class="meta">Units needed: 60 &middot; Still needed: 46</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Baby formula (can)">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Baby formula (can)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="firstaid">
+      <div class="icon">🩹</div>
+      <div class="name">First-aid & medicine kit</div>
+      <div class="meta">Units needed: 80 &middot; Still needed: 67</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one First-aid & medicine kit">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one First-aid & medicine kit">+</button>
+        </div>
+      </div>
+    </div>
+<div class="category">Comfort</div>
+
+    <div class="item-row" data-id="blankets">
+      <div class="icon">🧥</div>
+      <div class="name">Blankets</div>
+      <div class="meta">Units needed: 300 &middot; Still needed: 228</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Blankets">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Blankets">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="hygiene">
+      <div class="icon">🧴</div>
+      <div class="name">Hygiene kits</div>
+      <div class="meta">Units needed: 350 &middot; Still needed: 266</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Hygiene kits">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Hygiene kits">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="mats">
+      <div class="icon">🛏️</div>
+      <div class="name">Sleeping mats</div>
+      <div class="meta">Units needed: 150 &middot; Still needed: 127</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Sleeping mats">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Sleeping mats">+</button>
+        </div>
+      </div>
+    </div>
+<div class="category">Clean-up</div>
+
+    <div class="item-row" data-id="bins">
+      <div class="icon">📦</div>
+      <div class="name">Storage bins</div>
+      <div class="meta">Units needed: 180 &middot; Still needed: 152</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Storage bins">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Storage bins">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="bags">
+      <div class="icon">🗑️</div>
+      <div class="name">Heavy-duty trash bags (box)</div>
+      <div class="meta">Units needed: 200 &middot; Still needed: 169</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Heavy-duty trash bags (box)">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Heavy-duty trash bags (box)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="gloves">
+      <div class="icon">🧤</div>
+      <div class="name">Work gloves (pair)</div>
+      <div class="meta">Units needed: 120 &middot; Still needed: 101</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Work gloves (pair)">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Work gloves (pair)">+</button>
+        </div>
+      </div>
+    </div>
+<div class="category">For the kids</div>
+
+    <div class="item-row" data-id="toys">
+      <div class="icon">🧸</div>
+      <div class="name">Children's toys</div>
+      <div class="meta">Units needed: 40 &middot; Still needed: 34</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Children's toys">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Children's toys">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="chargers">
+      <div class="icon">🔌</div>
+      <div class="name">Portable phone chargers / power banks</div>
+      <div class="meta">Units needed: 100 &middot; Still needed: 84</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Portable phone chargers / power banks">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Portable phone chargers / power banks">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" data-id="coloring">
+      <div class="icon">🖍️</div>
+      <div class="name">Coloring books & activity sets</div>
+      <div class="meta">Units needed: 150 &middot; Still needed: 127</div>
+      <div class="selectwrap">
+        <div class="qty-stepper">
+          <button class="qty-btn minus" type="button" aria-label="Remove one Coloring books & activity sets">&minus;</button>
+          <span class="qty-val">0</span>
+          <button class="qty-btn plus" type="button" aria-label="Add one Coloring books & activity sets">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alt-divider"><span>Or</span></div>
+  <div class="alt-options" id="altOptions">
+        <label class="alt-option">
+      <input type="radio" name="altChoice" class="alt-radio" value="not_on_list">
+      <span>I'd prefer to donate an item that is not on the Wishlist</span>
+    </label>
+    <label class="alt-option">
+      <input type="radio" name="altChoice" class="alt-radio" value="monetary">
+      <span>I'd prefer to donate a gift card or make a monetary donation instead</span>
+    </label>
+    <label class="alt-option">
+      <input type="radio" name="altChoice" class="alt-radio" value="no_donation">
+      <span>I'd prefer not to make a donation at this time</span>
+    </label>
+  </div>
+  <div class="alt-followup" id="altFollowup" hidden>
+    <p class="alt-followup-q" id="altFollowupQ"></p>
+    <textarea class="alt-followup-text" id="altFollowupText" rows="4" placeholder="Type your response here…"></textarea>
+  </div>
+</div>
+
+<div class="sticky">
+  <div class="sticky-inner">
+    <div class="totals">
+      <div class="label">You've selected</div>
+      <div class="amt" id="totalsAmt"><span id="selCount">0</span> <span class="of">of 2</span></div>
+      <div class="dots" id="dotsWrap"><div class="dot" id="dot1"></div><div class="dot" id="dot2"></div></div>
+      <div class="alt-selected-note" id="altSelectedNote" hidden>Alternative option selected</div>
+    </div>
+    <button class="continue-btn" id="continueBtn" disabled>Continue</button>
+  </div>
+</div>
+<div class="over-msg" id="overMsg">You've selected 2 already &mdash; remove one first.</div>
+
+<div class="done-screen" id="doneScreen">
+  <div>
+    <h2>Thanks for your response.</h2>
+    <p>It has been recorded. Please continue in your survey.</p>
+  </div>
+</div>
+
+<footer>
+  WKTN News 5, Riverside Relief, and every event, name, and figure shown here are invented for a behavioral research study. Nothing on this page depicts a real station, organization, or event.
+</footer>
+
+<script>
+(function(){
+  var TRUTH = [{"id": "water", "needed": 400, "pledged": 96, "remaining": 304, "popular": true}, {"id": "formula", "needed": 60, "pledged": 14, "remaining": 46, "popular": true}, {"id": "firstaid", "needed": 80, "pledged": 13, "remaining": 67, "popular": false}, {"id": "blankets", "needed": 300, "pledged": 72, "remaining": 228, "popular": true}, {"id": "hygiene", "needed": 350, "pledged": 84, "remaining": 266, "popular": true}, {"id": "mats", "needed": 150, "pledged": 23, "remaining": 127, "popular": false}, {"id": "bins", "needed": 180, "pledged": 28, "remaining": 152, "popular": false}, {"id": "bags", "needed": 200, "pledged": 31, "remaining": 169, "popular": false}, {"id": "gloves", "needed": 120, "pledged": 19, "remaining": 101, "popular": false}, {"id": "toys", "needed": 40, "pledged": 6, "remaining": 34, "popular": false}, {"id": "chargers", "needed": 100, "pledged": 16, "remaining": 84, "popular": false}, {"id": "coloring", "needed": 150, "pledged": 23, "remaining": 127, "popular": false}];          // ground truth: {id, needed, pledged, remaining, popular}
+  var CONDITION = {"stage": "preparedness", "pool": "small", "list_type": "clearing_needed"};  // {stage, pool, list_type} baked into this page
+  var ALT_FOLLOWUP = {"not_on_list": "We at Riverside Relief appreciate your response. In the hope of improving the donor experience, please share why you'd prefer to donate an item that is not on the Wishlist.", "monetary": "We at Riverside Relief appreciate your response. In the hope of improving the donor experience, please share why you'd prefer to donate a gift card or make a monetary donation instead.", "no_donation": "We at Riverside Relief appreciate your response. In the hope of improving the donor experience, please share why you'd prefer not to make a donation at this time."}; // {altId: question text}
+  var MAX_SELECT = 2;
+
+  var truthById = {};
+  TRUTH.forEach(function(t){ truthById[t.id] = t; });
+
+  // qty[id] = how many units of that item the participant has picked
+  // (0, 1, or 2 -- capped only by the shared 2-unit total below, so the
+  // same item can supply both units). altChoice is mutually exclusive with
+  // picking any items: choosing one resets all quantities to 0 and vice
+  // versa, so exactly one of the two task types is ever "in progress."
+  var qty = {};
+  TRUTH.forEach(function(t){ qty[t.id] = 0; });
+  var altChoice = null; // null | 'not_on_list' | 'monetary' | 'no_donation'
+
+  var selCount = document.getElementById('selCount');
+  var dot1 = document.getElementById('dot1');
+  var dot2 = document.getElementById('dot2');
+  var totalsAmt = document.getElementById('totalsAmt');
+  var dotsWrap = document.getElementById('dotsWrap');
+  var altSelectedNote = document.getElementById('altSelectedNote');
+  var overMsg = document.getElementById('overMsg');
+  var continueBtn = document.getElementById('continueBtn');
+  var doneScreen = document.getElementById('doneScreen');
+  var altOptions = document.getElementById('altOptions');
+  var altRadios = altOptions.querySelectorAll('.alt-radio');
+  var altFollowup = document.getElementById('altFollowup');
+  var altFollowupQ = document.getElementById('altFollowupQ');
+  var altFollowupText = document.getElementById('altFollowupText');
+  var overMsgTimer = null;
+
+  function totalQty(){
+    return Object.keys(qty).reduce(function(s, id){ return s + qty[id]; }, 0);
+  }
+
+  function flashOver(){
+    overMsg.classList.add('show');
+    clearTimeout(overMsgTimer);
+    overMsgTimer = setTimeout(function(){ overMsg.classList.remove('show'); }, 1600);
+  }
+
+  function clearAltChoice(){
+    if (!altChoice) return;
+    altChoice = null;
+    altRadios.forEach(function(r){
+      r.checked = false;
+      r.closest('.alt-option').classList.remove('checked');
+    });
+    altFollowup.hidden = true;
+    altFollowupText.value = '';
+  }
+
+  function selectAlt(id){
+    altChoice = id;
+    Object.keys(qty).forEach(function(itemId){ qty[itemId] = 0; });
+    altFollowupQ.textContent = ALT_FOLLOWUP[id];
+    altFollowup.hidden = false;
+    altFollowupText.value = '';
+    render();
+    altFollowupText.focus();
+  }
+
+  function render(){
+    var total = totalQty();
+    selCount.textContent = total;
+    dot1.classList.toggle('on', total >= 1);
+    dot2.classList.toggle('on', total >= 2);
+
+    document.querySelectorAll('.item-row').forEach(function(row){
+      var id = row.getAttribute('data-id');
+      var stepper = row.querySelector('.qty-stepper');
+      var minusBtn = row.querySelector('.qty-btn.minus');
+      var plusBtn = row.querySelector('.qty-btn.plus');
+      var val = row.querySelector('.qty-val');
+      val.textContent = qty[id];
+      stepper.classList.toggle('has-qty', qty[id] > 0);
+      minusBtn.disabled = qty[id] <= 0;
+      plusBtn.disabled = total >= MAX_SELECT;
+    });
+
+    if (altChoice) {
+      totalsAmt.style.display = 'none';
+      dotsWrap.style.display = 'none';
+      altSelectedNote.hidden = false;
+    } else {
+      totalsAmt.style.display = '';
+      dotsWrap.style.display = '';
+      altSelectedNote.hidden = true;
+    }
+
+    var altTextOk = !!altChoice && altFollowupText.value.trim().length > 0;
+    continueBtn.disabled = altChoice ? !altTextOk : (total !== MAX_SELECT);
+  }
+
+  document.querySelectorAll('.item-row').forEach(function(row){
+    var id = row.getAttribute('data-id');
+    row.querySelector('.qty-btn.minus').addEventListener('click', function(){
+      if (qty[id] > 0) { qty[id]--; render(); }
+    });
+    row.querySelector('.qty-btn.plus').addEventListener('click', function(){
+      if (altChoice) { clearAltChoice(); }
+      if (totalQty() >= MAX_SELECT) { flashOver(); return; }
+      qty[id]++;
+      render();
+    });
+  });
+
+  altRadios.forEach(function(r){
+    r.addEventListener('change', function(){
+      if (!r.checked) return;
+      altOptions.querySelectorAll('.alt-option').forEach(function(o){ o.classList.remove('checked'); });
+      r.closest('.alt-option').classList.add('checked');
+      selectAlt(r.value);
+    });
+  });
+
+  altFollowupText.addEventListener('input', render);
+
+  function buildPayload(){
+    if (altChoice) {
+      return {
+        condition: CONDITION,
+        mode: altChoice,
+        altExplanation: altFollowupText.value.trim(),
+        timestamp: new Date().toISOString(),
+      };
+    }
+    var items = Object.keys(qty).filter(function(id){ return qty[id] > 0; }).map(function(id){
+      var t = truthById[id];
+      return {
+        id: id, qty: qty[id], popular: t.popular,
+        trueNeeded: t.needed, truePledged: t.pledged, trueRemaining: t.remaining,
+        truePledgedPct: t.needed > 0 ? Math.round((t.pledged / t.needed) * 1000) / 10 : null,
+      };
+    });
+    var popularCount = items.reduce(function(s, i){ return s + (i.popular ? i.qty : 0); }, 0);
+    var nonPopularCount = items.reduce(function(s, i){ return s + (i.popular ? 0 : i.qty); }, 0);
+    return {
+      condition: CONDITION,
+      mode: "items",
+      selected: items,
+      totalUnits: popularCount + nonPopularCount,
+      popularCount: popularCount,
+      nonPopularCount: nonPopularCount,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  window.getWishlistSelection = buildPayload;
+
+  continueBtn.addEventListener('click', function(){
+    if (continueBtn.disabled) return;
+    var payload = buildPayload();
+    try {
+      sessionStorage.setItem('wktn_wishlist_selection', JSON.stringify(payload));
+    } catch (e) {}
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'wktn_wishlist_submit', payload: payload }, '*');
+      }
+    } catch (e) {}
+    doneScreen.classList.add('show');
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
