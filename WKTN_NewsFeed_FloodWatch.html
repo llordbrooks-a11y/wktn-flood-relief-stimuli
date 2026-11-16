@@ -374,10 +374,13 @@
   var FEED_ID = "watch";
   var video = document.getElementById('feedVideo-watch');
   var gate = document.getElementById('playGate-watch');
+  var gateLabel = gate.querySelector('.gate-label');
 
   // Lock down: no scrubbing, no mute toggle, no right-click "show controls",
   // no fullscreen takeover, no click-to-pause. The only interaction this
-  // player exposes is the one-time "tap to begin" gate below.
+  // player exposes is the "tap to begin" gate below, which is reused as a
+  // "Watch again" replay button once the video finishes -- pause/scrub/
+  // seek mid-playback are still disabled; only full replay-from-start is.
   video.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   video.addEventListener('dblclick', function(e){ e.preventDefault(); });
   video.addEventListener('click', function(e){ e.preventDefault(); });
@@ -402,6 +405,7 @@
     completedAt: null,
     videoDurationSeconds: null,
     videoWatchedSeconds: 0,
+    videoReplayCount: 0,
     tabHiddenDuringPlayback: false,
     tabHiddenCount: 0,
     tabHiddenTotalSeconds: 0
@@ -438,6 +442,7 @@
     exposure.completedAt = new Date().toISOString();
     exposure.videoWatchedSeconds = exposure.videoDurationSeconds || video.currentTime;
     publish('completed');
+    showReplayGate();
   });
 
   function markStarted(method){
@@ -464,6 +469,23 @@
   });
 
   window.addEventListener('pagehide', function(){ publish('pagehide'); });
+
+  // Shown once the video finishes. Clicking it restarts playback from 0:00 --
+  // still no scrub bar, still no pause mid-playback, just a full rewatch.
+  function showReplayGate(){
+    gateLabel.textContent = 'Watch again';
+    showGate();
+  }
+
+  function replay(){
+    exposure.videoReplayCount += 1;
+    publish('replay');
+    hideGate();
+    video.currentTime = 0;
+    video.muted = false;
+    var p = video.play();
+    if (p && p.catch) { p.catch(function(){ showReplayGate(); }); }
+  }
 
   function begin(){
     video.muted = false;
@@ -492,7 +514,13 @@
     markStarted('autoplay');
   }
 
-  gate.addEventListener('click', begin);
+  gate.addEventListener('click', function(){
+    if (!exposure.videoStarted) {
+      begin();
+    } else if (video.ended) {
+      replay();
+    }
+  });
 })();
 </script>
 </body>
